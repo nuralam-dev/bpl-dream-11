@@ -1,7 +1,26 @@
+import { useState, type Dispatch, type SetStateAction } from "react";
 import { FaFlag, FaUser } from "react-icons/fa";
 import type { PlayerType } from "../../types/playersType";
+import { toast } from "react-toastify";
+export interface PlayerProps {
+  player: PlayerType;
+  coin: number;
+  setCoin: Dispatch<SetStateAction<number>>;
+}
 
-const PlayerCard = ({ player }: { player: PlayerType }) => {
+const PlayerCard = ({ player, coin, setCoin }: PlayerProps) => {
+  const [isSelected, setSelected] = useState(false);
+  const handleSelectPlayer = () => {
+    setSelected(true);
+    const newCoinPrice = coin - player.price;
+    if (newCoinPrice >= 0) {
+      toast.success(`${player.playerName} is done`)
+      setCoin(newCoinPrice);
+    } else {
+      toast.error(`Coin Not Enough For......${player.playerName}`);
+    }
+  };
+
   return (
     <div className="w-full max-w-md rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
       {/* Player Image */}
@@ -16,7 +35,6 @@ const PlayerCard = ({ player }: { player: PlayerType }) => {
       {/* Player Name */}
       <div className="mt-8 flex items-center gap-5">
         <FaUser className="text-4xl text-gray-700" />
-
         <h2 className="text-3xl font-bold text-gray-900">
           {player.playerName}
         </h2>
@@ -26,7 +44,6 @@ const PlayerCard = ({ player }: { player: PlayerType }) => {
       <div className="mt-8 flex items-center justify-between">
         <div className="flex items-center gap-5">
           <FaFlag className="text-3xl text-gray-500" />
-
           <p className="text-2xl text-gray-500">{player.origin}</p>
         </div>
 
@@ -46,7 +63,6 @@ const PlayerCard = ({ player }: { player: PlayerType }) => {
         <p className="text-xl font-semibold text-gray-900">
           {player.bowlingStyle}
         </p>
-
         <p className="text-xl text-gray-500">{player.battingStyle}</p>
       </div>
 
@@ -56,8 +72,16 @@ const PlayerCard = ({ player }: { player: PlayerType }) => {
           Price: ${player.price}
         </h3>
 
-        <button className="rounded-xl border border-gray-200 bg-white px-6 py-3 text-lg font-medium text-gray-900 transition hover:bg-gray-50">
-          Choose Player
+        <button
+          onClick={() => handleSelectPlayer()}
+          disabled={isSelected}
+          className={`rounded-xl border border-gray-200 px-6 py-3 text-lg font-medium transition ${
+            isSelected
+              ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+              : "bg-blue-600 text-white hover:bg-blue-700"
+          }`}
+        >
+          {isSelected ? "Selected" : "Choose Player"}
         </button>
       </div>
     </div>

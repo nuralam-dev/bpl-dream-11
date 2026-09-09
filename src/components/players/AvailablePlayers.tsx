@@ -1,11 +1,14 @@
+import type { Dispatch, SetStateAction } from "react";
 import type { PlayerType } from "../../types/playersType";
 import PlayerCard from "./PlayerCard";
 
 export interface AvailablePlayersProps {
   players: PlayerType[];
+  coin: number;
+    setCoin: Dispatch<SetStateAction<number>>;  
 }
 
-export default function AvailablePlayers({ players }: AvailablePlayersProps) {
+export default function AvailablePlayers({ players,  coin, setCoin}: AvailablePlayersProps) {
   return (
     <div className="container mx-auto ">
       {/* AvailablePlayers  */}
@@ -14,7 +17,7 @@ export default function AvailablePlayers({ players }: AvailablePlayersProps) {
         {players.map((player, ind: number) => {
           return (
             <div key={ind}>
-              <PlayerCard player={player}></PlayerCard>
+              <PlayerCard player={player} coin={coin} setCoin={setCoin}></PlayerCard>
             </div>
           );
         })}
