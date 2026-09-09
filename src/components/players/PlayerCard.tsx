@@ -1,4 +1,4 @@
-import React, { useState, type Dispatch, type SetStateAction } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import type { Iplayer } from "../../types/player";
 import { FaUser, FaGlobe } from "react-icons/fa";
 import { GiCricketBat, GiCricket } from "react-icons/gi";

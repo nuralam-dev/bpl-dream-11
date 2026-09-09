@@ -1,6 +1,7 @@
-import React, { useState, type Dispatch, type SetStateAction } from "react";
-import type { Iplayer } from "../../types/player";
+import { type Dispatch, type SetStateAction } from "react";
 import SelectedPlayerCard from "./SelectedPlayerCard";
+
+type Iplayer = Parameters<typeof SelectedPlayerCard>[0]["player"];
 
 interface ISelectedPlayersProps {
   coin: number;
