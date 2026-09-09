@@ -1,27 +1,39 @@
-import type { Dispatch, SetStateAction } from "react";
-import type { PlayerType } from "../../types/playersType";
+import { type Dispatch, type SetStateAction } from "react";
+import type { Iplayer } from "../../types/player";
 import PlayerCard from "./PlayerCard";
 
-export interface AvailablePlayersProps {
-  players: PlayerType[];
+interface IAvailableProps {
+  players: Iplayer[];
   coin: number;
-    setCoin: Dispatch<SetStateAction<number>>;  
+  setCoin: Dispatch<SetStateAction<number>>;
+  selectedPlayers: Iplayer[];
+  setSelectedPlayers: Dispatch<SetStateAction<Iplayer[]>>;
 }
 
-export default function AvailablePlayers({ players,  coin, setCoin}: AvailablePlayersProps) {
+const AvailablePlayers = ({
+  players,
+  coin,
+  setCoin,
+  selectedPlayers,
+  setSelectedPlayers,
+}: IAvailableProps) => {
+  // console.log(players, "players from available players");
   return (
-    <div className="container mx-auto ">
-      {/* AvailablePlayers  */}
-
-      <div className="grid grid-cols-3 gap-2.5 mt-[50px]">
-        {players.map((player, ind: number) => {
-          return (
-            <div key={ind}>
-              <PlayerCard player={player} coin={coin} setCoin={setCoin}></PlayerCard>
-            </div>
-          );
-        })}
-      </div>
+    <div className="grid grid-cols-3 gap-7 mt-6">
+      {players.map((player: Iplayer, ind: number) => {
+        return (
+          <PlayerCard
+            key={ind}
+            player={player}
+            coin={coin}
+            setCoin={setCoin}
+            selectedPlayers={selectedPlayers}
+            setSelectedPlayers={setSelectedPlayers}
+          />
+        );
+      })}
     </div>
   );
-}
+};
+
+export default AvailablePlayers;

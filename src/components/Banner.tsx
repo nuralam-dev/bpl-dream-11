@@ -1,11 +1,10 @@
+
 const Banner = () => {
-  return (
-    <div className="min-h-[400px] bg-amber-200 my-7 flex justify-center items-center">
-      <h1 className="font-bold text-3xl">
-        Assemble Your Ultimate Dream 11 Cricket Team
-      </h1>
-    </div>
-  );
+    return (
+        <div className='min-h-[400px] bg-purple-500 my-7 flex justify-center items-center'>
+                    <h2 className='font-bold text-6xl'>Banner</h2>
+        </div>
+    );
 };
 
 export default Banner;

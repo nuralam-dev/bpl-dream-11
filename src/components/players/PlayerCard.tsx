@@ -1,88 +1,137 @@
-import { useState, type Dispatch, type SetStateAction } from "react";
-import { FaFlag, FaUser } from "react-icons/fa";
-import type { PlayerType } from "../../types/playersType";
-import { toast } from "react-toastify";
-export interface PlayerProps {
-  player: PlayerType;
+import React, { useState, type Dispatch, type SetStateAction } from "react";
+import type { Iplayer } from "../../types/player";
+import { FaUser, FaGlobe } from "react-icons/fa";
+import { GiCricketBat, GiCricket } from "react-icons/gi";
+import { Bounce, toast } from "react-toastify";
+
+interface IPlayerCardProps {
+  player: Iplayer;
   coin: number;
   setCoin: Dispatch<SetStateAction<number>>;
+  selectedPlayers: Iplayer[];
+  setSelectedPlayers: Dispatch<SetStateAction<Iplayer[]>>;
 }
 
-const PlayerCard = ({ player, coin, setCoin }: PlayerProps) => {
-  const [isSelected, setSelected] = useState(false);
+const PlayerCard = ({
+  player,
+  coin,
+  setCoin,
+  selectedPlayers,
+  setSelectedPlayers,
+}: IPlayerCardProps) => {
+  const [isSelected, setIsSelected] = useState(false);
+  // console.log(isSelected, setIsSelected, "isSelected, setIsSelected");
+
+  console.log(coin, setCoin, "from card");
+
   const handleSelectPlayer = () => {
-    setSelected(true);
+    setIsSelected(true);
+
     const newCoinPrice = coin - player.price;
+
     if (newCoinPrice >= 0) {
-      toast.success(`${player.playerName} is done`)
       setCoin(newCoinPrice);
+      toast.success(`${player.playerName} is purchased successfully`, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
     } else {
-      toast.error(`Coin Not Enough For......${player.playerName}`);
+      toast.error("Coin is not enough to purchase");
     }
+
+    // Selected players logic
+    setSelectedPlayers([...selectedPlayers, player]);
   };
 
   return (
-    <div className="w-full max-w-md rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
+    <div className="group overflow-hidden rounded-2xl border border-base-300 bg-base-100 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       {/* Player Image */}
-      <div className="overflow-hidden rounded-3xl">
+      <figure className="relative h-64 overflow-hidden bg-base-200">
         <img
           src={player.playerImg}
           alt={player.playerName}
-          className="h-[370px] w-full object-cover"
+          className="h-full w-full transition-transform duration-500 group-hover:scale-105"
         />
-      </div>
 
-      {/* Player Name */}
-      <div className="mt-8 flex items-center gap-5">
-        <FaUser className="text-4xl text-gray-700" />
-        <h2 className="text-3xl font-bold text-gray-900">
-          {player.playerName}
-        </h2>
-      </div>
-
-      {/* Country & Player Type */}
-      <div className="mt-8 flex items-center justify-between">
-        <div className="flex items-center gap-5">
-          <FaFlag className="text-3xl text-gray-500" />
-          <p className="text-2xl text-gray-500">{player.origin}</p>
+        {/* Player Type Badge */}
+        <div className="absolute right-4 top-4">
+          <span className="badge badge-primary badge-lg font-semibold shadow-lg">
+            {player.playerType}
+          </span>
         </div>
 
-        <span className="rounded-xl bg-gray-100 px-6 py-4 text-xl text-gray-800">
-          {player.playerType}
-        </span>
-      </div>
+        {/* Gradient */}
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/60 to-transparent" />
+      </figure>
 
-      {/* Divider */}
-      <div className="my-6 border-t border-gray-200"></div>
+      {/* Content */}
+      <div className="p-5">
+        {/* Name */}
+        <div className="mb-4 flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <FaUser />
+          </div>
 
-      {/* Rating */}
-      <h3 className="text-2xl font-bold text-gray-900">Rating</h3>
+          <div>
+            <h2 className="text-xl font-bold">{player.playerName}</h2>
+            <p className="flex items-center gap-1 text-sm text-base-content/60">
+              <FaGlobe className="text-xs" />
+              {player.origin}
+            </p>
+          </div>
+        </div>
 
-      {/* Playing Style */}
-      <div className="mt-6 flex items-center justify-between">
-        <p className="text-xl font-semibold text-gray-900">
-          {player.bowlingStyle}
-        </p>
-        <p className="text-xl text-gray-500">{player.battingStyle}</p>
-      </div>
+        {/* Player Info */}
+        <div className="grid grid-cols-2 gap-3">
+          {/* Batting */}
+          <div className="rounded-xl bg-base-200 p-3">
+            <div className="mb-1 flex items-center gap-2 text-sm font-medium text-base-content/60">
+              <GiCricketBat className="text-primary" />
+              Batting
+            </div>
 
-      {/* Price & Button */}
-      <div className="mt-6 flex items-center justify-between">
-        <h3 className="text-2xl font-bold text-gray-900">
-          Price: ${player.price}
-        </h3>
+            <p className="font-semibold">{player.battingStyle}</p>
+          </div>
 
-        <button
-          onClick={() => handleSelectPlayer()}
-          disabled={isSelected}
-          className={`rounded-xl border border-gray-200 px-6 py-3 text-lg font-medium transition ${
-            isSelected
-              ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-              : "bg-blue-600 text-white hover:bg-blue-700"
-          }`}
-        >
-          {isSelected ? "Selected" : "Choose Player"}
-        </button>
+          {/* Bowling */}
+          <div className="rounded-xl bg-base-200 p-3">
+            <div className="mb-1 flex items-center gap-2 text-sm font-medium text-base-content/60">
+              <GiCricket className="text-primary" />
+              Bowling
+            </div>
+
+            <p className="font-semibold">{player.bowlingStyle}</p>
+          </div>
+        </div>
+
+        <div className="my-5 border-t border-base-300" />
+
+        {/* Price + Button */}
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="text-sm text-base-content/60">Player Price</p>
+            <h3 className="text-2xl font-extrabold text-primary">
+              ${player.price.toLocaleString()}
+            </h3>
+          </div>
+
+          <button
+            onClick={() => handleSelectPlayer()}
+            className={`btn btn-primary rounded-xl px-5 shadow-md transition-all hover:scale-105`}
+            // disabled={isSelected === true ? true : false}
+            // disabled={isSelected  ? true : false}
+            disabled={isSelected}
+          >
+            {isSelected === true ? "Selected" : "Choose Player"}
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-export interface PlayerType {
+export interface Iplayer {
   playerName: string;
   playerImg: string;
   origin: string;

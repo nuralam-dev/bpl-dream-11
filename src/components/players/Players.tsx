@@ -1,53 +1,77 @@
-import { use, useState, type Dispatch, type SetStateAction } from "react";
-import type { PlayerType } from "../../types/playersType";
+import React, {
+  use,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
+import type { Iplayer } from "../../types/player";
 import AvailablePlayers from "./AvailablePlayers";
+import SelectedPlayers from "./SelectedPlayers";
 
-interface PlayerProps {
-  playerPromise: Promise<PlayerType[]>;
+interface PlayersProps {
+  playersPromise: Promise<Iplayer[]>;
   coin: number;
   setCoin: Dispatch<SetStateAction<number>>;
 }
 
-const Players = ({ playerPromise, coin, setCoin }: PlayerProps) => {
-  const [btnType, setBtnType] = useState<"Available" | "Selected">("Available");
-  const players = use(playerPromise);
+const Players = ({ playersPromise, coin, setCoin }: PlayersProps) => {
+  const players = use(playersPromise);
+  //   console.log(players);
+  const [buttonType, setButtonType] = useState<"available" | "selected">(
+    "available",
+  ); //available or selected
+  const [selectedPlayers, setSelectedPlayers] = useState<Iplayer[]>([]);
 
-  const handleBtnType = (type: "Available" | "Selected") => {
-    setBtnType(type);
+  console.log(buttonType);
+
+  const handleUpdateBtnType = (type: "available" | "selected") => {
+    // Logic 1
+    // Logic 2
+    // Logic 3
+    setButtonType(type);
   };
 
   return (
     <div className="container mx-auto">
-      {/* flex container using justify-between for header/buttons positioning */}
-      <div className="flex items-center justify-between my-4">
-        <h2 className="text-xl font-bold">
-          {btnType === "Available" ? "Available Players" : "Selected Players"}
+      <div className="flex justify-between gap-4 mb-2">
+        <h2 className="font-bold text-xl">
+          {buttonType === "available"
+            ? "Available Players"
+            : "Selected Players"}
         </h2>
 
-        {/* Buttons aligned to the right */}
         <div>
           <button
-            onClick={() => handleBtnType("Available")}
-            className={`btn ${btnType === "Available" ? "btn-success" : ""} rounded-r-none`}
+            onClick={() => handleUpdateBtnType("available")}
+            className={`btn ${buttonType === "available" ? "btn-success" : ""} rounded-r-none`}
           >
             Available
           </button>
           <button
-            onClick={() => handleBtnType("Selected")}
-            className={`btn ${btnType === "Selected" ? "btn-success" : ""} rounded-l-none`}
+            onClick={() => handleUpdateBtnType("selected")}
+            className={`btn ${buttonType === "selected" ? "btn-success" : ""} rounded-r-none`}
           >
             Selected
           </button>
         </div>
       </div>
 
-      <div>
-        {btnType === "Available" ? (
-          <AvailablePlayers players={players} coin={coin} setCoin={setCoin} />
-        ) : (
-          <div>Selected Players Content</div>
-        )}
-      </div>
+      {buttonType === "available" ? (
+        <AvailablePlayers
+          players={players}
+          coin={coin}
+          setCoin={setCoin}
+          selectedPlayers={selectedPlayers}
+          setSelectedPlayers={setSelectedPlayers}
+        />
+      ) : (
+        <SelectedPlayers
+          selectedPlayers={selectedPlayers}
+          setSelectedPlayers={setSelectedPlayers}
+          coin={coin}
+          setCoin={setCoin}
+        />
+      )}
     </div>
   );
 };

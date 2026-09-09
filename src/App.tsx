@@ -1,26 +1,28 @@
 import { Suspense, useState } from "react";
 import Banner from "./components/Banner";
-import { Nav } from "./components/Nav";
+import Nav from "./components/Nav";
 import Players from "./components/players/Players";
-import type { PlayerType } from "./types/playersType";
+import type { Iplayer } from "./types/player";
 
-// Fetch function
-const playerPromise = async (): Promise<PlayerType[]> => {
+const playersFetch = async (): Promise<Iplayer[]> => {
   const res = await fetch("/data.json");
   const data = await res.json();
   return data;
 };
 
 function App() {
+  // const playersPromise = playersFetch();
+  const [playersPromise] = useState(() => playersFetch());
+
   const [coin, setCoin] = useState(1500);
 
   return (
     <>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Nav coin={coin} />
-        <Banner />
+      <Nav coin={coin} />
+      <Banner />
+      <Suspense fallback={<h2>Loading.......</h2>}>
         <Players
-          playerPromise={playerPromise()}
+          playersPromise={playersPromise}
           coin={coin}
           setCoin={setCoin}
         />
